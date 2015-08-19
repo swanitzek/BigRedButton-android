@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
-import io.plauder.app.Handler.GcmMessageHandler;
+import eu.dreambyte.bigredbutton.Handler.GcmMessageHandler;
 
 public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
 
