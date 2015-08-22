@@ -48,7 +48,7 @@ public class AlarmActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
 
-        txtCounter = (TextView)findViewById(R.id.txtCount);
+       // txtCounter = (TextView)findViewById(R.id.txtCount);
 
         mReceiver = new BroadcastReceiver() {
             @Override
@@ -57,7 +57,7 @@ public class AlarmActivity extends ActionBarActivity {
 
                 mCounter++;
 
-                txtCounter.setText(Integer.toString(mCounter));
+              //  txtCounter.setText(Integer.toString(mCounter));
 
                 PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
                 mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "tag");
