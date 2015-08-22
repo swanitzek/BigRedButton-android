@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
+import java.util.logging.Handler;
 
 import eu.dreambyte.bigredbutton.Handler.GcmMessageHandler;
 import eu.dreambyte.bigredbutton.Interfaces.DeviceIdProvider;
@@ -79,26 +80,27 @@ public class AlarmActivity extends ActionBarActivity {
     }
 
     public void getRegId(){
-        new AsyncTask<Void, Void, String>() {
+        new AsyncTask<Void, Void, Boolean>() {
             @Override
-            protected String doInBackground(Void... params) {
+            protected Boolean doInBackground(Void... params) {
                 if (mDeviceIdProvider.requestDeviceId())
                 {
                     String deviceId = mDeviceIdProvider.getDeviceId();
 
                     mButtonServerRegistrator.setServerAdress(SERVER_ADRESS);
-                    mButtonServerRegistrator.registerAtServer(deviceId);
+                    return mButtonServerRegistrator.registerAtServer(deviceId);
                 } else {
                     // Show error
-
+                    return false;
                 }
-
-                return "";
             }
 
             @Override
-            protected void onPostExecute(String msg) {
-
+            protected void onPostExecute(Boolean status) {
+                if (!status)
+                {
+                    Toast.makeText(getApplicationContext(), "Server-Registration error.", Toast.LENGTH_LONG).show();
+                }
             }
         }.execute(null, null, null);
     }
