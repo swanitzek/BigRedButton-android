@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
+import android.os.PowerManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ public class AlarmActivity extends ActionBarActivity {
     // Local members
     private BroadcastReceiver mReceiver;
     private int mCounter = 0;
+    private PowerManager.WakeLock mWakeLock;
 
     // References to views
     private TextView txtCounter;
@@ -56,6 +58,10 @@ public class AlarmActivity extends ActionBarActivity {
                 mCounter++;
 
                 txtCounter.setText(Integer.toString(mCounter));
+
+                PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+                mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "tag");
+                mWakeLock.acquire();
             }
         };
 
@@ -75,6 +81,12 @@ public class AlarmActivity extends ActionBarActivity {
 
     @Override
     protected void onStop() {
+        if (mWakeLock != null)
+        {
+            mWakeLock.release();
+            mWakeLock = null;
+        }
+
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
         super.onStop();
     }

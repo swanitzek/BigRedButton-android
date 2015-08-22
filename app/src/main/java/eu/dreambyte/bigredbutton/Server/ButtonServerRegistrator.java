@@ -1,7 +1,5 @@
 package eu.dreambyte.bigredbutton.Server;
 
-import android.widget.Button;
-
 import com.turbomanage.httpclient.BasicHttpClient;
 import com.turbomanage.httpclient.HttpResponse;
 import com.turbomanage.httpclient.ParameterMap;
@@ -45,7 +43,7 @@ public class ButtonServerRegistrator implements ServerRegistrator {
             throw new IllegalArgumentException("ServerAdress");
         }
 
-        BasicHttpClient httpClient = new BasicHttpClient("https://example.com");
+        BasicHttpClient httpClient = new BasicHttpClient("https://dreambyte.eu");
         ParameterMap params = httpClient.newParams()
                 .add("id", GcmId);
         httpClient.addHeader("name", "value");

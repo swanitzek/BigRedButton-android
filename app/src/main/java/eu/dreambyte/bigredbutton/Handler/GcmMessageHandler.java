@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import eu.dreambyte.bigredbutton.AlarmActivity;
 import eu.dreambyte.bigredbutton.R;
 import eu.dreambyte.bigredbutton.Receiver.GcmBroadcastReceiver;
 
@@ -54,6 +55,10 @@ public class GcmMessageHandler extends IntentService {
         mMes = "Alarm"; // extras.getString("title");
         // showToast();
         Log.i("GCM", "Received : (" + messageType + ")  " + extras.getString("title"));
+
+        Intent dialogIntent = new Intent(getBaseContext(), AlarmActivity.class);
+        dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        getApplication().startActivity(dialogIntent);
 
         sendResult(mMes);
         showToast();
