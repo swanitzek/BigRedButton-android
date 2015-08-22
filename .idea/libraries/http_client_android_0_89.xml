@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="http-client-android-0.89">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.turbomanage.basic-http-client/http-client-android/0.89/87f4f7a8adb91ff7efe42b335adbd9bec5353463/http-client-android-0.89.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.turbomanage.basic-http-client/http-client-android/0.89/d7ce8c3f18ce42f67789570ef17d8ce14904bcab/http-client-android-0.89-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

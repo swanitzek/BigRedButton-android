@@ -19,14 +19,26 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import java.io.IOException;
 
 import eu.dreambyte.bigredbutton.Handler.GcmMessageHandler;
+import eu.dreambyte.bigredbutton.Interfaces.DeviceIdProvider;
+import eu.dreambyte.bigredbutton.PushMessage.GcmDeviceIdProvider;
+import eu.dreambyte.bigredbutton.Server.ButtonServerRegistrator;
+import eu.dreambyte.bigredbutton.Server.ServerRegistrator;
 
 public class AlarmActivity extends ActionBarActivity {
-    private String m_sRegId = "";
-    private GoogleCloudMessaging gcm;
+    // Local members
     private BroadcastReceiver mReceiver;
     private int mCounter = 0;
-    private static String PROJECT_NUMBER = "632557272302";
+
+    // References to views
     private TextView txtCounter;
+
+    // Static members
+    private static String PROJECT_NUMBER = "632557272302";
+    private static String SERVER_ADRESS = "http://www.dreambyte.eu/bigredbutton";
+
+    // Dependencies
+    private DeviceIdProvider mDeviceIdProvider = null;
+    private ServerRegistrator mButtonServerRegistrator = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +57,9 @@ public class AlarmActivity extends ActionBarActivity {
                 txtCounter.setText(Integer.toString(mCounter));
             }
         };
+
+        mDeviceIdProvider = new GcmDeviceIdProvider(getApplicationContext(), PROJECT_NUMBER);
+        mButtonServerRegistrator = new ButtonServerRegistrator();
 
         getRegId();
     }
@@ -67,21 +82,18 @@ public class AlarmActivity extends ActionBarActivity {
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
-                String msg = "";
-                try {
-                    if (gcm == null) {
-                        gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
-                    }
+                if (mDeviceIdProvider.requestDeviceId())
+                {
+                    String deviceId = mDeviceIdProvider.getDeviceId();
 
-                    m_sRegId = gcm.register(PROJECT_NUMBER);
-                    msg = "Device registered, registration ID=" + m_sRegId;
-                    Log.i("GCM", msg);
-
-                } catch (IOException ex) {
-                    msg = "Error :" + ex.getMessage();
+                    mButtonServerRegistrator.setServerAdress(SERVER_ADRESS);
+                    mButtonServerRegistrator.registerAtServer(deviceId);
+                } else {
+                    // Show error
 
                 }
-                return msg;
+
+                return "";
             }
 
             @Override
