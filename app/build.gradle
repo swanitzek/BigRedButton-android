@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 21
+    compileSdkVersion 15
     buildToolsVersion "21.1.2"
 
     packagingOptions {
@@ -20,7 +20,7 @@ android {
     defaultConfig {
         applicationId "eu.dreambyte.bigredbutton"
         minSdkVersion 14
-        targetSdkVersion 21
+        targetSdkVersion 15
         versionCode 1
         versionName "1.0"
     }
@@ -35,7 +35,7 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile "com.google.android.gms:play-services:3.1.+"
-    compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.android.support:support-v4:21.0.0'
     compile 'com.turbomanage.basic-http-client:http-client-android:0.89'
     compile 'com.github.markushi:circlebutton:1.1'
 }
