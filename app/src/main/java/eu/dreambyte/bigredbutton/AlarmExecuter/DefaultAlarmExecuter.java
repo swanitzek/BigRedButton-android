@@ -60,7 +60,7 @@ public class DefaultAlarmExecuter implements AlarmExecuter {
         // Get instance of Vibrator from current Context
         mVibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
 
-        long[] pattern = {0, 100, 1000, 100, 1000, 100, 1000, 100, 1000, 1500};
+        long[] pattern = {0, 100, 1000, 1500, 1000, 100, 1000, 1500, 1000};
 
         mVibrator.vibrate(pattern, 0);
     }
