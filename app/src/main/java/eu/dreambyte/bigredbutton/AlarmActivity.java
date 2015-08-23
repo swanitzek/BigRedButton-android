@@ -1,65 +1,87 @@
 package eu.dreambyte.bigredbutton;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
+import android.os.PowerManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-
-import java.io.IOException;
-
+import at.markushi.ui.CircleButton;
+import eu.dreambyte.bigredbutton.AlarmExecuter.DefaultAlarmExecuter;
 import eu.dreambyte.bigredbutton.Handler.GcmMessageHandler;
+import eu.dreambyte.bigredbutton.Interfaces.AlarmExecuter;
 import eu.dreambyte.bigredbutton.Interfaces.DeviceIdProvider;
 import eu.dreambyte.bigredbutton.PushMessage.GcmDeviceIdProvider;
 import eu.dreambyte.bigredbutton.Server.ButtonServerRegistrator;
 import eu.dreambyte.bigredbutton.Server.ServerRegistrator;
 
-public class AlarmActivity extends ActionBarActivity {
+public class AlarmActivity extends Activity implements View.OnClickListener {
     // Local members
     private BroadcastReceiver mReceiver;
     private int mCounter = 0;
 
     // References to views
     private TextView txtCounter;
+    private CircleButton btnStop;
 
     // Static members
     private static String PROJECT_NUMBER = "632557272302";
     private static String SERVER_ADRESS = "http://www.dreambyte.eu/bigredbutton";
+    private static String TAG = "eu.dreambyte.BigRedButton";
 
     // Dependencies
     private DeviceIdProvider mDeviceIdProvider = null;
     private ServerRegistrator mButtonServerRegistrator = null;
+    private AlarmExecuter mAlarmExecuter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
 
-        txtCounter = (TextView)findViewById(R.id.txtCount);
+        btnStop = (CircleButton) findViewById(R.id.btnStop);
 
-        mReceiver = new BroadcastReceiver() {
+        btnStop.setOnClickListener(this);
+        btnStop.setVisibility(View.INVISIBLE);
+
+        mDeviceIdProvider = new GcmDeviceIdProvider(getApplicationContext(), PROJECT_NUMBER);
+        mButtonServerRegistrator = new ButtonServerRegistrator();
+        mAlarmExecuter = new DefaultAlarmExecuter(this);
+
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+
+        if (extras != null)
+        {
+            if (intent.getExtras().getBoolean("alarm"))
+            {
+                mAlarmExecuter.execute();
+                btnStop.setVisibility(View.VISIBLE);
+            }
+        }
+
+       mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String s = intent.getStringExtra(GcmMessageHandler.GCM_RESULT);
 
                 mCounter++;
 
-                txtCounter.setText(Integer.toString(mCounter));
+                mAlarmExecuter.execute();
+                btnStop.setVisibility(View.VISIBLE);
             }
         };
-
-        mDeviceIdProvider = new GcmDeviceIdProvider(getApplicationContext(), PROJECT_NUMBER);
-        mButtonServerRegistrator = new ButtonServerRegistrator();
 
         getRegId();
     }
@@ -74,31 +96,34 @@ public class AlarmActivity extends ActionBarActivity {
 
     @Override
     protected void onStop() {
+        mAlarmExecuter.cancel();
+
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
         super.onStop();
     }
 
     public void getRegId(){
-        new AsyncTask<Void, Void, String>() {
+        new AsyncTask<Void, Void, Boolean>() {
             @Override
-            protected String doInBackground(Void... params) {
+            protected Boolean doInBackground(Void... params) {
                 if (mDeviceIdProvider.requestDeviceId())
                 {
                     String deviceId = mDeviceIdProvider.getDeviceId();
 
                     mButtonServerRegistrator.setServerAdress(SERVER_ADRESS);
-                    mButtonServerRegistrator.registerAtServer(deviceId);
+                    return mButtonServerRegistrator.registerAtServer(deviceId);
                 } else {
                     // Show error
-
+                    return false;
                 }
-
-                return "";
             }
 
             @Override
-            protected void onPostExecute(String msg) {
-
+            protected void onPostExecute(Boolean status) {
+                if (!status)
+                {
+                    Toast.makeText(getApplicationContext(), "Server-Registration error.", Toast.LENGTH_LONG).show();
+                }
             }
         }.execute(null, null, null);
     }
@@ -124,5 +149,11 @@ public class AlarmActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View v) {
+        mAlarmExecuter.cancel();
+        btnStop.setVisibility(View.INVISIBLE);
     }
 }

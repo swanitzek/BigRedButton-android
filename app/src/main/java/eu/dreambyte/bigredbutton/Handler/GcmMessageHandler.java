@@ -18,6 +18,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import eu.dreambyte.bigredbutton.AlarmActivity;
+import eu.dreambyte.bigredbutton.AlarmExecuter.DefaultAlarmExecuter;
+import eu.dreambyte.bigredbutton.Interfaces.AlarmExecuter;
 import eu.dreambyte.bigredbutton.R;
 import eu.dreambyte.bigredbutton.Receiver.GcmBroadcastReceiver;
 
@@ -51,34 +54,21 @@ public class GcmMessageHandler extends IntentService {
 
         String messageType = gcm.getMessageType(intent);
 
-        mMes = "Alarm"; // extras.getString("title");
-        // showToast();
+        mMes = "Alarm";
         Log.i("GCM", "Received : (" + messageType + ")  " + extras.getString("title"));
 
+        startAlarmActivity();
         sendResult(mMes);
-        showToast();
-
-        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("Alarm!")
-                        .setContentText("Hier ist es!");
-
-        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        // Vibrate for 500 milliseconds
-        v.vibrate(500);
-
-        // Sets an ID for the notification
-        int mNotificationId = 001;
-// Gets an instance of the NotificationManager service
-        NotificationManager mNotifyMgr =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-// Builds the notification and issues it.
-        mNotifyMgr.notify(mNotificationId, mBuilder.build());
 
         GcmBroadcastReceiver.completeWakefulIntent(intent);
+    }
+
+    private void startAlarmActivity() {
+        Intent dialogIntent = new Intent(getApplicationContext(), AlarmActivity.class);
+        dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        dialogIntent.putExtra("alarm", true);
+
+        getApplicationContext().startActivity(dialogIntent);
     }
 
     public void sendResult(String message) {
@@ -86,14 +76,5 @@ public class GcmMessageHandler extends IntentService {
         if(message != null)
             intent.putExtra(GCM_RESULT, message);
         mBroadcaster.sendBroadcast(intent);
-    }
-
-    public void showToast(){
-        mHandler.post(new Runnable() {
-            public void run() {
-                Toast.makeText(getApplicationContext(), mMes, Toast.LENGTH_LONG).show();
-            }
-        });
-
     }
 }
