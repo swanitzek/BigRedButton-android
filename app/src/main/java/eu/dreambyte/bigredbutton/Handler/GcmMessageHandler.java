@@ -57,6 +57,7 @@ public class GcmMessageHandler extends IntentService {
         mMes = "Alarm";
         Log.i("GCM", "Received : (" + messageType + ")  " + extras.getString("title"));
 
+        startAlarmActivity();
         sendResult(mMes);
 
         GcmBroadcastReceiver.completeWakefulIntent(intent);
@@ -65,6 +66,7 @@ public class GcmMessageHandler extends IntentService {
     private void startAlarmActivity() {
         Intent dialogIntent = new Intent(getApplicationContext(), AlarmActivity.class);
         dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        dialogIntent.putExtra("alarm", true);
 
         getApplicationContext().startActivity(dialogIntent);
     }

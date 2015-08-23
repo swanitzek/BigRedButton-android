@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.PowerManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -58,7 +59,19 @@ public class AlarmActivity extends Activity implements View.OnClickListener {
         mButtonServerRegistrator = new ButtonServerRegistrator();
         mAlarmExecuter = new DefaultAlarmExecuter(this);
 
-        mReceiver = new BroadcastReceiver() {
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+
+        if (extras != null)
+        {
+            if (intent.getExtras().getBoolean("alarm"))
+            {
+                mAlarmExecuter.execute();
+                btnStop.setVisibility(View.VISIBLE);
+            }
+        }
+
+       mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String s = intent.getStringExtra(GcmMessageHandler.GCM_RESULT);
@@ -66,7 +79,6 @@ public class AlarmActivity extends Activity implements View.OnClickListener {
                 mCounter++;
 
                 mAlarmExecuter.execute();
-
                 btnStop.setVisibility(View.VISIBLE);
             }
         };
