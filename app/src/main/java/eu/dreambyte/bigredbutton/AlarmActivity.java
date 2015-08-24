@@ -167,6 +167,7 @@ public class AlarmActivity extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         mAlarmExecuter.cancel();
-        btnStop.setVisibility(View.INVISIBLE);
+
+        finish();
     }
 }
