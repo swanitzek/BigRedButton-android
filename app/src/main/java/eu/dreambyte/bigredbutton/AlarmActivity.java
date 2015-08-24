@@ -5,9 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Configuration;
 import android.os.AsyncTask;
-import android.os.PowerManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,15 +13,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import at.markushi.ui.CircleButton;
 import eu.dreambyte.bigredbutton.AlarmExecuter.DefaultAlarmExecuter;
 import eu.dreambyte.bigredbutton.Handler.GcmMessageHandler;
 import eu.dreambyte.bigredbutton.Interfaces.AlarmExecuter;
-import eu.dreambyte.bigredbutton.Interfaces.DeviceIdProvider;
+import eu.dreambyte.bigredbutton.Interfaces.GCM.DeviceIdProvider;
 import eu.dreambyte.bigredbutton.PushMessage.GcmDeviceIdProvider;
 import eu.dreambyte.bigredbutton.Server.ButtonServerRegistrator;
 import eu.dreambyte.bigredbutton.Server.ServerRegistrator;
@@ -31,16 +27,14 @@ import eu.dreambyte.bigredbutton.Server.ServerRegistrator;
 public class AlarmActivity extends Activity implements View.OnClickListener {
     // Local members
     private BroadcastReceiver mReceiver;
-    private int mCounter = 0;
 
     // References to views
-    private TextView txtCounter;
     private CircleButton btnStop;
 
     // Static members
-    private static String PROJECT_NUMBER = "632557272302";
-    private static String SERVER_ADRESS = "http://www.dreambyte.eu/bigredbutton";
-    private static String TAG = "eu.dreambyte.BigRedButton";
+    private static final String PROJECT_NUMBER = "632557272302";
+    private static final String SERVER_ADRESS = "http://www.dreambyte.eu/bigredbutton";
+    private static final String TAG = "eu.dreambyte.BigRedButton";
 
     // Dependencies
     private DeviceIdProvider mDeviceIdProvider = null;
@@ -57,9 +51,8 @@ public class AlarmActivity extends Activity implements View.OnClickListener {
        mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String s = intent.getStringExtra(GcmMessageHandler.GCM_RESULT);
+                // String s = intent.getStringExtra(GcmMessageHandler.GCM_RESULT);
 
-                mCounter++;
 
                 mAlarmExecuter.execute();
                 btnStop.setVisibility(View.VISIBLE);
@@ -115,7 +108,7 @@ public class AlarmActivity extends Activity implements View.OnClickListener {
         super.onStop();
     }
 
-    public void getRegId(){
+    private void getRegId(){
         new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... params) {

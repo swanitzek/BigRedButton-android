@@ -1,21 +1,21 @@
 package eu.dreambyte.bigredbutton.Server;
 
+import android.util.Log;
+
 import com.turbomanage.httpclient.BasicHttpClient;
 import com.turbomanage.httpclient.HttpResponse;
 import com.turbomanage.httpclient.ParameterMap;
-
-import eu.dreambyte.bigredbutton.Network.HttpRequest;
 
 public class ButtonServerRegistrator implements ServerRegistrator {
     // Private Member
     private String mServerAdress = null;
 
-    // Dependencies
-    private HttpRequest mHttpRequest = null;
+    // Constants
+    private final String TAG = "ButtonServerRegistrator";
 
     public ButtonServerRegistrator()
     {
-        mHttpRequest = new HttpRequest();
+
     }
 
     @Override
@@ -43,13 +43,20 @@ public class ButtonServerRegistrator implements ServerRegistrator {
             throw new IllegalArgumentException("ServerAdress");
         }
 
-        BasicHttpClient httpClient = new BasicHttpClient("https://dreambyte.eu");
-        ParameterMap params = httpClient.newParams()
-                .add("id", GcmId);
-        httpClient.addHeader("name", "value");
-        httpClient.setConnectionTimeout(4000);
-        HttpResponse httpResponse = httpClient.get("/bigredbutton/setGcmId", params);
+        try
+        {
+            BasicHttpClient httpClient = new BasicHttpClient("https://dreambyte.eu");
+            ParameterMap params = httpClient.newParams()
+                    .add("id", GcmId);
+            httpClient.addHeader("name", "value");
+            httpClient.setConnectionTimeout(4000);
+            HttpResponse httpResponse = httpClient.get("/bigredbutton/setGcmId", params);
 
-        return true;
+            return httpResponse.getStatus() == 200;
+
+        } catch (Exception e) {
+            Log.e(TAG, "registerAtServer: " + e.getMessage());
+            return false;
+        }
     }
 }
