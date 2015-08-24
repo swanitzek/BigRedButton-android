@@ -1,27 +1,16 @@
 package eu.dreambyte.bigredbutton.AlarmExecuter;
 
-import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.PowerManager;
 import android.os.Vibrator;
-import android.support.v4.app.NotificationCompat;
-
-import eu.dreambyte.bigredbutton.AlarmActivity;
 import eu.dreambyte.bigredbutton.Interfaces.AlarmExecuter;
-import eu.dreambyte.bigredbutton.R;
 
-/**
- * Created by Stefan on 23.08.2015.
- */
 public class DefaultAlarmExecuter implements AlarmExecuter {
     private Context mContext = null;
     private PowerManager.WakeLock mWakeLock = null;
     private Vibrator mVibrator = null;
 
-    private static String TAG = "eu.dreambyte.BigRedButton";
+    private static final String TAG = "eu.dreambyte.BigRedButton";
 
     public DefaultAlarmExecuter(Context context)
     {
@@ -31,8 +20,8 @@ public class DefaultAlarmExecuter implements AlarmExecuter {
     /*
         Shows an notification in the notification area.
      */
-    private void showNotification()
-    {
+   // private void showNotification()
+  //  {
         // NotificationCompat.Builder mBuilder =
        //        new NotificationCompat.Builder(mContext)
        //                 .setSmallIcon(R.mipmap.ic_launcher)
@@ -40,15 +29,15 @@ public class DefaultAlarmExecuter implements AlarmExecuter {
       //                  .setContentText("Hier ist es!!!");
 
         // Sets an ID for the notification
-        int mNotificationId = 001;
+       // int mNotificationId = 1;
 
         // Gets an instance of the NotificationManager service
-        NotificationManager mNotifyMgr =
-                (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        //NotificationManager mNotifyMgr =
+        //        (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
         // Builds the notification and issues it.
         // mNotifyMgr.notify(mNotificationId, mBuilder.build());
-    }
+   // }
 
     @Override
     public void execute()

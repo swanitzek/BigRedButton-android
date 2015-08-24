@@ -1,6 +1,5 @@
 package eu.dreambyte.bigredbutton.PushMessage;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
@@ -8,11 +7,8 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
 
-import eu.dreambyte.bigredbutton.Interfaces.DeviceIdProvider;
+import eu.dreambyte.bigredbutton.Interfaces.GCM.DeviceIdProvider;
 
-/**
- * Created by dev on 22.08.2015.
- */
 public class GcmDeviceIdProvider implements DeviceIdProvider {
     private String mDeviceId = null;
     private Context mContext = null;
@@ -41,7 +37,7 @@ public class GcmDeviceIdProvider implements DeviceIdProvider {
 
     public boolean requestDeviceId()
     {
-        String msg = "";
+        String msg;
         GoogleCloudMessaging gcm;
 
         try {

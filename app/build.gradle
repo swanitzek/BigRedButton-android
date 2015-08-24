@@ -20,21 +20,29 @@ android {
     defaultConfig {
         applicationId "eu.dreambyte.bigredbutton"
         minSdkVersion 14
-        targetSdkVersion 15
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    android {
+        lintOptions {
+            disable 'FieldCanBeLocal'
+            abortOnError false
+        }
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile "com.google.android.gms:play-services:3.1.+"
+    compile "com.google.android.gms:play-services:3.1.59"
     compile 'com.android.support:support-v4:18.0.0'
     compile 'com.turbomanage.basic-http-client:http-client-android:0.89'
     compile 'com.github.markushi:circlebutton:1.1'
