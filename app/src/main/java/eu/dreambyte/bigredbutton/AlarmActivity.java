@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,29 +49,10 @@ public class AlarmActivity extends Activity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_alarm);
+       super.onCreate(savedInstanceState);
+       setContentView(R.layout.activity_alarm);
 
-        btnStop = (CircleButton) findViewById(R.id.btnStop);
-
-        btnStop.setOnClickListener(this);
-        btnStop.setVisibility(View.INVISIBLE);
-
-        mDeviceIdProvider = new GcmDeviceIdProvider(getApplicationContext(), PROJECT_NUMBER);
-        mButtonServerRegistrator = new ButtonServerRegistrator();
-        mAlarmExecuter = new DefaultAlarmExecuter(this);
-
-        Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
-
-        if (extras != null)
-        {
-            if (intent.getExtras().getBoolean("alarm"))
-            {
-                mAlarmExecuter.execute();
-                btnStop.setVisibility(View.VISIBLE);
-            }
-        }
+       getRegId();
 
        mReceiver = new BroadcastReceiver() {
             @Override
@@ -83,7 +66,25 @@ public class AlarmActivity extends Activity implements View.OnClickListener {
             }
         };
 
-        getRegId();
+        btnStop = (CircleButton) findViewById(R.id.btnStop);
+
+        btnStop.setOnClickListener(this);
+        btnStop.setVisibility(View.INVISIBLE);
+
+        mDeviceIdProvider = new GcmDeviceIdProvider(getApplicationContext(), PROJECT_NUMBER);
+        mButtonServerRegistrator = new ButtonServerRegistrator();
+        mAlarmExecuter = new DefaultAlarmExecuter(this);
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        Window wind = this.getWindow();
+        wind.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+        wind.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        wind.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
     }
 
     @Override
@@ -92,6 +93,18 @@ public class AlarmActivity extends Activity implements View.OnClickListener {
         LocalBroadcastManager.getInstance(this).registerReceiver((mReceiver),
                 new IntentFilter(GcmMessageHandler.GCM_MESSAGE)
         );
+
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+
+        if (extras != null)
+        {
+            if (intent.getExtras().getBoolean("alarm"))
+            {
+                mAlarmExecuter.execute();
+                btnStop.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     @Override
