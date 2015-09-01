@@ -48,7 +48,6 @@ public class ButtonServerRegistrator implements ServerRegistrator {
             BasicHttpClient httpClient = new BasicHttpClient("https://dreambyte.eu");
             ParameterMap params = httpClient.newParams()
                     .add("id", GcmId);
-            httpClient.addHeader("name", "value");
             httpClient.setConnectionTimeout(4000);
             HttpResponse httpResponse = httpClient.get("/bigredbutton/setGcmId", params);
 
