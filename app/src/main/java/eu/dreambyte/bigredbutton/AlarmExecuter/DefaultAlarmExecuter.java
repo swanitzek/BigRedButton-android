@@ -16,29 +16,7 @@ public class DefaultAlarmExecuter implements AlarmExecuter {
     {
         mContext = context;
     }
-
-    /*
-        Shows an notification in the notification area.
-     */
-   // private void showNotification()
-  //  {
-        // NotificationCompat.Builder mBuilder =
-       //        new NotificationCompat.Builder(mContext)
-       //                 .setSmallIcon(R.mipmap.ic_launcher)
-       //                 .setContentTitle("Alarm!")
-      //                  .setContentText("Hier ist es!!!");
-
-        // Sets an ID for the notification
-       // int mNotificationId = 1;
-
-        // Gets an instance of the NotificationManager service
-        //NotificationManager mNotifyMgr =
-        //        (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        // Builds the notification and issues it.
-        // mNotifyMgr.notify(mNotificationId, mBuilder.build());
-   // }
-
+    
     @Override
     public void execute()
     {
