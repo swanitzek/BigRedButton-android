@@ -51,9 +51,6 @@ public class AlarmActivity extends Activity implements View.OnClickListener {
        mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                // String s = intent.getStringExtra(GcmMessageHandler.GCM_RESULT);
-
-
                 mAlarmExecuter.execute();
                 btnStop.setVisibility(View.VISIBLE);
             }
